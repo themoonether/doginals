@@ -25,7 +25,7 @@ NODE_RPC_URL=http://127.0.0.1:22555
 NODE_RPC_USER=nodeuser
 NODE_RPC_PASS=nodepassword
 TESTNET=false
-FEE_PER_KB=99000000
+FEE_PER_KB=690000
 ```
 
 Please follow other methods in main guide here: https://github.com/zachzwei/doginals
