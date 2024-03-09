@@ -35,6 +35,8 @@ async function main() {
 
     if (cmd == 'mint') {
         await mint()
+    } else if (cmd == 'getinfo') {
+        await getinfo()
     } else if (cmd == 'wallet') {
         await wallet()
     } else if (cmd == 'server') {
@@ -107,6 +109,80 @@ async function doge20Transfer(op = "transfer") {
   }
 }
 
+async function getinfo() {
+    const body = {
+        jsonrpc: "1.0",
+        method: "getinfo",
+        id: "curltest",
+        params: [],
+    };
+    try {
+        const response = await axios.post(process.env.NODE_RPC_URL, body, {
+            headers: {
+                'content-type': 'text/plain;'
+            },
+            auth: {
+                username: process.env.NODE_RPC_USER,
+                password: process.env.NODE_RPC_PASS
+            }
+        });
+        console.log(response.data);
+    } catch (error) {
+        console.log(error.response.data);
+    }
+}
+
+async function importaddress(address) {
+    const body = {
+        jsonrpc: "1.0",
+        method: "importaddress",
+        id: "curltest",
+        params: [address, "doginals", false],
+    };
+    try {
+        const response = await axios.post(process.env.NODE_RPC_URL, body, {
+            headers: {
+                'content-type': 'text/plain;'
+            },
+            auth: {
+                username: process.env.NODE_RPC_USER,
+                password: process.env.NODE_RPC_PASS
+            }
+        });
+        // console.log(response.data);
+        listaccounts();
+    } catch (error) {
+        console.log(error.response.data);
+    }
+    
+}
+
+async function listaccounts() {
+    const body = {
+        jsonrpc: "1.0",
+        method: "listaccounts",
+        id: "curltest",
+        params: [0, true],
+    };
+    try {
+        const response = await axios.post(process.env.NODE_RPC_URL, body, {
+            headers: {
+                'content-type': 'text/plain;'
+            },
+            auth: {
+                username: process.env.NODE_RPC_USER,
+                password: process.env.NODE_RPC_PASS
+            }
+        });
+        console.log(response.data);
+        if ('doginals' in response.data.result) {
+            console.log("Doginals wallet has been added to watchlist")
+        }
+    } catch (error) {
+        console.log(error.response.data);
+    }
+}
+
 async function wallet() {
     let subcmd = process.argv[3]
 
@@ -134,6 +210,7 @@ function walletNew() {
         const json = { privkey, address, utxos: [] }
         fs.writeFileSync(WALLET_PATH, JSON.stringify(json, 0, 2))
         console.log('address', address)
+        importaddress(address);
     } else {
         throw new Error('wallet already exists')
     }
@@ -141,21 +218,53 @@ function walletNew() {
 
 
 async function walletSync() {
-    if (process.env.TESTNET == 'true') throw new Error('no testnet api')
+    if (process.env.TESTNET == 'true') throw new Error('no testnet api');
 
-    let wallet = JSON.parse(fs.readFileSync(WALLET_PATH))
+    let wallet = JSON.parse(fs.readFileSync(WALLET_PATH));
+    console.log(wallet.address);
 
-    console.log('syncing utxos with dogechain.info api')
+    // console.log('syncing utxos with dogechain.info api')
 
-    let response = await axios.get(`https://dogechain.info/api/v1/address/unspent/${wallet.address}`)
-    wallet.utxos = response.data.unspent_outputs.map(output => {
-        return {
-            txid: output.tx_hash,
-            vout: output.tx_output_n,
-            script: output.script,
-            satoshis: output.value
-        }
-    })
+    // let response = await axios.get(`https://dogechain.info/api/v1/address/unspent/${wallet.address}`)
+    // wallet.utxos = response.data.unspent_outputs.map(output => {
+    //     return {
+    //         txid: output.tx_hash,
+    //         vout: output.tx_output_n,
+    //         script: output.script,
+    //         satoshis: output.value
+    //     }
+    // })
+
+    const body = {
+        jsonrpc: "1.0",
+        method: "listunspent",
+        id: "curltest",
+        params: [0, 999999, [wallet.address]],
+    };
+    try {
+        const response = await axios.post(process.env.NODE_RPC_URL, body, {
+            headers: {
+                'content-type': 'text/plain;'
+            },
+            auth: {
+                username: process.env.NODE_RPC_USER,
+                password: process.env.NODE_RPC_PASS
+            }
+        });
+        console.log(response.data);
+
+        wallet.utxos = response.data.result.map(output => {
+            return {
+                txid: output.txid,
+                vout: output.vout,
+                script: output.scriptPubKey,
+                satoshis: output.amount * 10**8
+            }
+        })
+
+    } catch (error) {
+        console.log(error.response.data);
+    }
 
     fs.writeFileSync(WALLET_PATH, JSON.stringify(wallet, 0, 2))
 
