@@ -22,6 +22,7 @@ if (process.env.FEE_PER_KB) {
 }
 
 const WALLET_PATH = process.env.WALLET || '.wallet.json'
+const maxUtxo = 9999999
 
 async function main() {
     let cmd = process.argv[2]
@@ -239,7 +240,7 @@ async function walletSync() {
         jsonrpc: "1.0",
         method: "listunspent",
         id: "curltest",
-        params: [0, 999999, [wallet.address]],
+        params: [0, maxUtxo, [wallet.address]],
     };
     try {
         const response = await axios.post(process.env.NODE_RPC_URL, body, {
@@ -258,7 +259,7 @@ async function walletSync() {
                 txid: output.txid,
                 vout: output.vout,
                 script: output.scriptPubKey,
-                satoshis: output.amount * 10**8
+                satoshis: Math.ceil(output.amount * 10**8)
             }
         })
 
