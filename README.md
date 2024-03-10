@@ -29,3 +29,6 @@ FEE_PER_KB=690000
 ```
 
 Please follow other methods in main guide here: https://github.com/zachzwei/doginals
+
+### Troubleshooting
+SOON

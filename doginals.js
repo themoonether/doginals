@@ -24,6 +24,13 @@ if (process.env.FEE_PER_KB) {
 const WALLET_PATH = process.env.WALLET || '.wallet.json'
 const maxUtxo = 9999999
 
+const options = {
+    auth: {
+        username: process.env.NODE_RPC_USER,
+        password: process.env.NODE_RPC_PASS
+    }
+}
+
 async function main() {
     let cmd = process.argv[2]
 
@@ -118,47 +125,31 @@ async function getinfo() {
         params: [],
     };
     try {
-        const response = await axios.post(process.env.NODE_RPC_URL, body, {
-            headers: {
-                'content-type': 'text/plain;'
-            },
-            auth: {
-                username: process.env.NODE_RPC_USER,
-                password: process.env.NODE_RPC_PASS
-            }
-        });
+        const response = await axios.post(process.env.NODE_RPC_URL, body, options);
         console.log(response.data);
     } catch (error) {
         console.log(error.response.data);
     }
 }
 
-async function importaddress(address) {
+async function importaddress(address, name) {
     const body = {
         jsonrpc: "1.0",
         method: "importaddress",
         id: "curltest",
-        params: [address, "doginals", false],
+        params: [address, name, false],
     };
     try {
-        const response = await axios.post(process.env.NODE_RPC_URL, body, {
-            headers: {
-                'content-type': 'text/plain;'
-            },
-            auth: {
-                username: process.env.NODE_RPC_USER,
-                password: process.env.NODE_RPC_PASS
-            }
-        });
+        const response = await axios.post(process.env.NODE_RPC_URL, body, options);
         // console.log(response.data);
-        listaccounts();
+        listaccounts(name);
     } catch (error) {
         console.log(error.response.data);
     }
     
 }
 
-async function listaccounts() {
+async function listaccounts(name) {
     const body = {
         jsonrpc: "1.0",
         method: "listaccounts",
@@ -166,19 +157,43 @@ async function listaccounts() {
         params: [0, true],
     };
     try {
-        const response = await axios.post(process.env.NODE_RPC_URL, body, {
-            headers: {
-                'content-type': 'text/plain;'
-            },
-            auth: {
-                username: process.env.NODE_RPC_USER,
-                password: process.env.NODE_RPC_PASS
-            }
-        });
-        console.log(response.data);
-        if ('doginals' in response.data.result) {
-            console.log("Doginals wallet has been added to watchlist")
+        const response = await axios.post(process.env.NODE_RPC_URL, body, options);
+        // console.log(response.data);
+        if (name in response.data.result) {
+            console.log(`Wallet: ${name} has been added to watchlist`);
         }
+    } catch (error) {
+        console.log(error.response.data);
+    }
+}
+
+async function getaddress(account) {
+    const body = {
+        jsonrpc: "1.0",
+        method: "getaddressesbyaccount",
+        id: "curltest",
+        params: [account],
+    };
+    try {
+        const response = await axios.post(process.env.NODE_RPC_URL, body, options);
+        console.log(`Account: ${account}, Address: ${response.data.result}`);
+        return response.data.result[0];
+    } catch (error) {
+        console.log(error.response.data);
+    }
+}
+
+async function getaccount(address) {
+    const body = {
+        jsonrpc: "1.0",
+        method: "getaccount",
+        id: "curltest",
+        params: [address],
+    };
+    try {
+        const response = await axios.post(process.env.NODE_RPC_URL, body, options);
+        console.log(`Address: ${address}, Account: ${response.data.result}`);
+        return response.data.result;
     } catch (error) {
         console.log(error.response.data);
     }
@@ -203,17 +218,27 @@ async function wallet() {
 }
 
 
-function walletNew() {
+async function walletNew() {
     if (!fs.existsSync(WALLET_PATH)) {
         const privateKey = new PrivateKey()
         const privkey = privateKey.toWIF()
         const address = privateKey.toAddress().toString()
         const json = { privkey, address, utxos: [] }
+        const name = address.slice(-4)
         fs.writeFileSync(WALLET_PATH, JSON.stringify(json, 0, 2))
         console.log('address', address)
-        importaddress(address);
+        importaddress(address, name)
     } else {
-        throw new Error('wallet already exists')
+        // throw new Error('wallet already exists')
+        let wallet = JSON.parse(fs.readFileSync(WALLET_PATH));
+        const name = wallet.address.slice(-4);
+        accountExisted = (name == await getaccount(wallet.address)) ? true : false;
+        addressExisted = (wallet.address == await getaddress(name)) ? true : false;
+        if (accountExisted && addressExisted) {
+            throw new Error('wallet already exists');
+        } else {
+            importaddress(wallet.address, name);
+        }
     }
 }
 
@@ -243,16 +268,8 @@ async function walletSync() {
         params: [0, maxUtxo, [wallet.address]],
     };
     try {
-        const response = await axios.post(process.env.NODE_RPC_URL, body, {
-            headers: {
-                'content-type': 'text/plain;'
-            },
-            auth: {
-                username: process.env.NODE_RPC_USER,
-                password: process.env.NODE_RPC_PASS
-            }
-        });
-        console.log(response.data);
+        const response = await axios.post(process.env.NODE_RPC_URL, body, options);
+        // console.log(response.data);
 
         wallet.utxos = response.data.result.map(output => {
             return {
