@@ -126,7 +126,7 @@ async function getinfo() {
     };
     try {
         const response = await axios.post(process.env.NODE_RPC_URL, body, options);
-        console.log(response.data);
+        console.log(response.data.result);
     } catch (error) {
         console.log(error.response.data);
     }
