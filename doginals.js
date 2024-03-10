@@ -125,14 +125,11 @@ async function getinfo() {
         params: [],
     };
     try {
-        console.log("Requesting getinfo")
         const response = await axios.post(process.env.NODE_RPC_URL, body, options);
-        console.log(response);
         console.log(response.data.result);
     } catch (error) {
         console.log(error.response.data);
     }
-    console.log("Request is finished");
 }
 
 async function importaddress(address, name) {
