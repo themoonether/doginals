@@ -13,6 +13,8 @@ There might be some bugs, so please using with caution.
 - New wallet created will be add to dogecoin-cli watchlist using importaddress method.
 - Wallt syncing will use dogecoin-cli's listunspent method to collect UTXOs (max at 9999999 utxos, more than that might have to change your own maxUtxo at line 25).
 - Please sync the wallet everytime before doing some mint and split.
+- Added `.env.sample` and `dogi.json` 
+
 ```
 node . wallet sync
 ```
@@ -110,7 +112,8 @@ TESTNET=false
 FEE_PER_KB=690000
 ```
 
-###Initiate doginals minter with 'Node.js'
+###Initiate doginals minter with `Node.js`
+
 ```
 npm install
 ```
