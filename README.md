@@ -21,7 +21,13 @@ node . wallet sync
 
 ### SetupGuide ###
 
-Requirement
+Clone the repository
+```
+cd $HOME
+git clone https://github.com/themoonether/doginals.git
+```
+
+Dependency requirement
 
 NodeJS
 Please head over to (https://github.com/nodesource/distributions#using-ubuntu) and follow the installation instructions.
@@ -98,6 +104,8 @@ Example blocks are downloading
 Copy & Edit `.env` in your doginals minter folder 
 
 ```
+cd $HOME
+cd doginals
 cp .env.sample .env
 nano .env
 ```
