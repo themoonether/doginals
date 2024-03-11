@@ -1,6 +1,6 @@
-# Doginals Shibscriber (Minter) Ubuntu Version
+# Doginals Minter (Ubuntu Version)
 
-A minter and protocol for inscriptions on Dogecoin. 
+A minter and protocol for inscriptions on Dogecoin with local full dogecoin node. 
 
 ## ⚠️⚠️⚠️ Important ⚠️⚠️⚠️
 
@@ -105,7 +105,9 @@ TESTNET=false
 FEE_PER_KB=690000
 ```
 
-Please follow other methods in main guide here: https://github.com/zachzwei/doginals
+Please follow other methods in main guide here: 
+https://github.com/zachzwei/doginals
+https://github.com/Puckapao/doginals
 
 ### Troubleshooting
 SOON
