@@ -4,8 +4,8 @@ A minter and protocol for inscriptions on Dogecoin with local full dogecoin node
 
 ## ⚠️⚠️⚠️ Important ⚠️⚠️⚠️
 
-This is a fork of https://github.com/Puckapao/doginals
-To remove the use of dogechain.info and use your own dogecoin node rpc instead.
+This is a fork of fork by https://github.com/Puckapao/doginals
+It removed the use of dogechain.info and switch `doginals.js` to use your own dogecoin node rpc instead.
 There might be some bugs, so please using with caution.
 
 ### Changes
@@ -45,6 +45,8 @@ wget https://github.com/dogecoin/dogecoin/releases/download/v1.14.6/dogecoin-1.1
 Start Dogecoin Core
 ```
 cd dogecoin-1.14.6/bin
+sudo cp dogeciond /usr/local/bin
+sudo cp dogecoin-cli /usr/local/bin
 dogecoind -daemon
 ```
 ***After it started and created .dogecoin in your working directory (eg. /home/doge/.dogecoin) stop the core with ctrl+c and set up your `dogecoin.conf`
