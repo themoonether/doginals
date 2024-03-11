@@ -137,8 +137,8 @@ Create minter wallet ***Do not mint your inscriptions to this wallet***
 ```
 node . wallet new
 ```
-It will create a new wallet address stored in `.wallet.json` , which your private resides
-Send some DOGE to minting fund to the wallet
+It will create a new wallet address stored in `.wallet.json` , which your private key resides
+Send some ÐOGE to minting fund to the wallet
 After the tx has confirmed do wallet sync
 
 ```
@@ -147,9 +147,7 @@ node . wallet sync
 
 (Optional) Split your utxos if you wish to mint simutaneously.
 ```
-
 node . wallet split <amount>
-
 ```
 Example
 `node . wallet split 10`
