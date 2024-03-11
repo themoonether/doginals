@@ -126,7 +126,7 @@ You can get the current fee per kb from here. [Here](https://blockchair.com/)
 ## Initiate doginals minter with `Node.js`
 
 ```
-$cd $HOME/doginals
+cd $HOME/doginals
 npm install
 ```
 
