@@ -38,7 +38,10 @@ node -v
 Dogecoin Core
 
 Download and Extract
-```wget https://github.com/dogecoin/dogecoin/releases/download/v1.14.6/dogecoin-1.14.6-x86_64-linux-gnu.tar.gz && tar -xvzf dogecoin-1.14.6-x86_64-linux-gnu.tar.gz```
+
+```
+wget https://github.com/dogecoin/dogecoin/releases/download/v1.14.6/dogecoin-1.14.6-x86_64-linux-gnu.tar.gz && tar -xvzf dogecoin-1.14.6-x86_64-linux-gnu.tar.gz
+```
 Start Dogecoin Core
 ```
 cd dogecoin-1.14.6/bin
