@@ -70,7 +70,7 @@ listen=1
 rpcuser=nodeuser
 rpcpassword=nodepassword
 ```
-Wait until the chain fully synced
+Wait until the chain fully synced.
 Check the syncing process with
 `dogecoin-cli getblockchaininfo`
 
@@ -95,7 +95,10 @@ Example blocks are downloading
 
 Copy & Edit `.env` in your doginals minter folder 
 
-`cp .env.sample .env`
+```
+cp .env.sample .env
+nano .env
+```
 
 Set your `.env` to your setting
 
