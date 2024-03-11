@@ -45,7 +45,7 @@ wget https://github.com/dogecoin/dogecoin/releases/download/v1.14.6/dogecoin-1.1
 Start Dogecoin Core
 ```
 cd dogecoin-1.14.6/bin
-sudo cp dogeciond /usr/local/bin
+sudo cp dogecoind /usr/local/bin
 sudo cp dogecoin-cli /usr/local/bin
 dogecoind -daemon
 ```
@@ -106,6 +106,49 @@ NODE_RPC_PASS=nodepassword
 TESTNET=false
 FEE_PER_KB=690000
 ```
+
+###Initiate doginals minter with 'Node.js'
+```
+npm install
+```
+###Create minter wallet *Do not mint your inscriptions to this wallet*
+
+```
+node . wallet new
+```
+You will get an address and send minting fund to the wallet
+After the tx has confirmed do wallet sync
+
+```
+node . wallet sync
+```
+
+(Optional) Split your utxos
+```
+node . wallet split <amount>
+```
+Example
+`node . wallet split 10`
+
+###Inscribing a DRC-20
+```
+node . mint <address> <file PATH>
+```
+Example
+`node . mint D6fWtjJ7MSwifGBwPVHd7fADW7krSAAbwu ./dogi.json`
+
+DRC-20 json can be structured as following
+```
+{ 
+  "p": "drc-20",
+  "op": "mint",
+  "tick": "dogi",
+  "amt": "1000"
+}
+```
+Feel free to create your own json file for minting
+See `dogi.json`
+
 
 Please follow other methods in main guide here: 
 https://github.com/zachzwei/doginals
