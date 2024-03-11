@@ -2,7 +2,7 @@
 
 A minter and protocol for inscriptions on Dogecoin with local full dogecoin node. 
 
-## ⚠️⚠️⚠️ Important ⚠️⚠️⚠️
+## ⚠️⚠️⚠️ Important ⚠️⚠️⚠️ 
 
 This is a fork of fork by https://github.com/Puckapao/doginals
 It removed the use of dogechain.info and switch `doginals.js` to use your own dogecoin node rpc instead.
@@ -19,7 +19,7 @@ node . wallet sync
 ```
 - Added files `.env.sample` and `dogi.json`
 
-### SetupGuide ###
+## Setup Guide
 
 Clone the repository
 ```
@@ -27,9 +27,9 @@ cd $HOME
 git clone https://github.com/themoonether/doginals.git
 ```
 
-Dependency requirement
+Dependency requirements
 
-NodeJS
+### NodeJS
 Please head over to (https://github.com/nodesource/distributions#using-ubuntu) and follow the installation instructions.
 
 ```
@@ -43,7 +43,7 @@ Check if they are installed by running the following commands:
 node -v
 ```
 
-Dogecoin Core
+### Install Dogecoin Core
 
 Download and Extract
 
@@ -57,7 +57,7 @@ sudo cp dogecoind /usr/local/bin
 sudo cp dogecoin-cli /usr/local/bin
 dogecoind -daemon
 ```
-***After it started and created .dogecoin in your working directory (eg. /home/doge/.dogecoin) stop the core with ctrl+c and set up your `dogecoin.conf`
+*After it started and created .dogecoin in your working directory (eg. /home/doge/.dogecoin) stop the core with `ctrl+c` and set up your `dogecoin.conf`*
 
 `dogecoin.conf` setting
 
@@ -68,6 +68,7 @@ nano dogecoin.conf
 ```
 
 Put the content below in `dogecoin.conf` and start the core with `dogecoind -daemon`
+Set to your own username/password
 
 ```
 server=1
@@ -101,7 +102,8 @@ Example blocks are downloading
 
 *** Once it synced your result should be `"initialblockdownload": false`
 
-Copy & Edit `.env` in your doginals minter folder 
+Copy & edit `.env` in your doginals minter folder 
+Set to your own username/password
 
 ```
 cd $HOME
@@ -119,37 +121,58 @@ NODE_RPC_PASS=nodepassword
 TESTNET=false
 FEE_PER_KB=690000
 ```
+You can get the current fee per kb from here. [Here](https://blockchair.com/)
 
-###Initiate doginals minter with `Node.js`
+## Initiate doginals minter with `Node.js`
 
 ```
+$cd $HOME/doginals
 npm install
 ```
-###Create minter wallet *Do not mint your inscriptions to this wallet*
+
+### Managing your minter wallet
+
+Create minter wallet ***Do not mint your inscriptions to this wallet***
 
 ```
 node . wallet new
 ```
-You will get an address and send minting fund to the wallet
+It will create a new wallet address stored in `.wallet.json` , which your private resides
+Send some DOGE to minting fund to the wallet
 After the tx has confirmed do wallet sync
 
 ```
 node . wallet sync
 ```
 
-(Optional) Split your utxos
+(Optional) Split your utxos if you wish to mint simutaneously.
 ```
+
 node . wallet split <amount>
+
 ```
 Example
 `node . wallet split 10`
 
-###Inscribing a DRC-20
+Wallet transfer function can be done with
+```
+node . wallet send <address> <optional amount>
+```
+*By providing no amount will send to whole fund to wallet destination*
+
+Example
+```
+node . wallet send D6fWtjJ7MSwifGBwPVHd7fADW7krSAAbwu
+```
+
+### Inscribing any file or DRC-20 json
 ```
 node . mint <address> <file PATH>
 ```
 Example
-`node . mint D6fWtjJ7MSwifGBwPVHd7fADW7krSAAbwu ./dogi.json`
+```
+node . mint D6fWtjJ7MSwifGBwPVHd7fADW7krSAAbwu ./dogi.json
+```
 
 DRC-20 json can be structured as following
 ```
@@ -163,6 +186,16 @@ DRC-20 json can be structured as following
 Feel free to create your own json file for minting
 See `dogi.json`
 
+### Lazy minter DRC-20
+Inscribing directly with drc-20 script
+
+```
+node . drc-20 mint <address> <ticker> <minting lim amount>
+```
+Example
+```
+node . drc-20 mint D6fWtjJ7MSwifGBwPVHd7fADW7krSAAbwu kbsu 1000
+```
 
 Please follow other methods in main guide here: 
 https://github.com/zachzwei/doginals
